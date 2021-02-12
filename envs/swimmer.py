@@ -463,12 +463,9 @@ class DeepMicroSwimmerEnv(gym.Env):
         self.state[8] = self.t
         self.reward = self._get_reward()
            
-        # self.u = self.u_precompute[:,:,self.t]
-        # self.v = self.v_precompute[:,:,self.t]
-        # self.omg = self.omg_precompute[:,:,self.t]
-        self.u = self.u_precompute[:,:,4000-self.t]
-        self.v = self.v_precompute[:,:,4000-self.t]
-        self.omg = self.omg_precompute[:,:,4000-self.t]
+        self.u = self.u_precompute[:,:,self.t]
+        self.v = self.v_precompute[:,:,self.t]
+        self.omg = self.omg_precompute[:,:,self.t]
         
 
         return self.state.copy(), self.reward, False, {}

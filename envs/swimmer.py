@@ -374,7 +374,7 @@ class MicroSwimmerEnv(gym.Env):
 class DeepMicroSwimmerEnv(gym.Env):
 
     def __init__(self):
-        data = loadmat('precompute4000_equal_vortices.mat')
+        data = loadmat('precompute4000_nu_0_000625.mat')
         # precompute1000_diagonal_c_vortices.mat
         # Extract data from precomputed flow file
         self.xx = np.array(data['xx'])
@@ -462,20 +462,31 @@ class DeepMicroSwimmerEnv(gym.Env):
         # self.state[9] = Uy
         self.state[8] = self.t
         self.reward = self._get_reward()
-           
+        
+        # Forward flow in time
         self.u = self.u_precompute[:,:,self.t]
         self.v = self.v_precompute[:,:,self.t]
         self.omg = self.omg_precompute[:,:,self.t]
+        # Reversed flow in time
+        # self.u = self.u_precompute[:,:,3999-self.t]
+        # self.v = self.v_precompute[:,:,3999-self.t]
+        # self.omg = self.omg_precompute[:,:,3999-self.t]
         
 
         return self.state.copy(), self.reward, False, {}
 
     def reset(self):
+        # Flow forward in time
         self.u = self.u_precompute[:,:,0]
         self.v = self.v_precompute[:,:,0]
         self.omg = self.omg_precompute[:,:,0]
+        # Flow backwards in time
+        # self.u = self.u_precompute[:,:,-1]
+        # self.v = self.v_precompute[:,:,-1]
+        # self.omg = self.omg_precompute[:,:,-1]
         self.t = 0
         self.state = np.zeros(9)
+        # self.state = np.zeros(8)
         x_rl = np.zeros(4)
 
         self.reward = 0.0
@@ -485,6 +496,7 @@ class DeepMicroSwimmerEnv(gym.Env):
         # x_rl[:2] = self.get_random_position()
         radius = 0.45
         x_rl[:2] = self.get_circular_position(radius)
+        # x_rl[:2] = self.get_specific_circular_position(radius)
         # x_rl[:2] = np.array([0.9,0.1])
         x_rl[2:] = self.target_direction(x_rl[:2], self.target)
         
@@ -551,10 +563,11 @@ class DeepMicroSwimmerEnv(gym.Env):
         # else:
         #     rew = -alignment + 100*dist - self.t
         rew = -alignment + 100*dist - self.t
-        # if np.linalg.norm(self.state[:2]-self.target)< 0.05:
-        #     rew = self.state[6]
-        # else:
-            # rew = 0.0
+        # rew = -alignment - self.t
+        if np.linalg.norm(self.state[:2]-self.target)< 0.05 or np.linalg.norm(self.x_naive[:2]-self.target)<0.05:
+            rew = dist
+        else:
+            rew = 0.0
         # rew[1] = np.linalg.norm(self.state[:2]-self.target)
         return rew
 
@@ -620,6 +633,14 @@ class DeepMicroSwimmerEnv(gym.Env):
         pos = np.zeros(2)
         pos[0] = self.target[0] + radius*np.cos((theta/180)*np.pi)
         pos[1] = self.target[1] + radius*np.sin((theta/180)*np.pi)
+        return pos
+    
+    def get_specific_circular_position(self,radius):
+        theta = np.random.randint(0,9)
+        theta = 9.5
+        pos = np.zeros(2)
+        pos[0] = self.target[0] + radius*np.cos((theta/5)*np.pi)
+        pos[1] = self.target[1] + radius*np.sin((theta/5)*np.pi)
         return pos
     
     def set_state_and_target(self, state,target):

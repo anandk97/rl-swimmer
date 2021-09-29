@@ -85,7 +85,7 @@ def animate_gym(i, xx, yy, omg_precompute, x_rl, udir_rl, x_naive, udir_naive, t
     # Fluid flow plot
     clev = 15
     plt.clf()
-    cont = plt.contourf(xx, yy, omg_precompute[:, :, i], clev)
+    cont = plt.contourf(xx, yy, omg_precompute[:, :, i], clev,cmap=plt.cm.gray)
     #cont = plt.contourf(xx, yy, omg_precompute[:, :, 0], clev)
     plt.colorbar()
     # Position of the target
@@ -93,11 +93,13 @@ def animate_gym(i, xx, yy, omg_precompute, x_rl, udir_rl, x_naive, udir_naive, t
     # Current position of the RL microswimmer
     plt.scatter(x_rl[i][0], x_rl[i][1], color='blue')
     # Current direction of the RL microswimmer
-    plt.quiver(x_rl[i][0], x_rl[i][1], x_rl[i][2], x_rl[i][3], color='blue')
+    # plt.quiver(x_rl[i][0], x_rl[i][1], x_rl[i][2], x_rl[i][3], color='blue')
+    plt.quiver(x_rl[i][0], x_rl[i][1], 0.5,0.5, color='blue')
     # Current position of the naive microswimmer
     plt.scatter(x_naive[i][0], x_naive[i][1], color='green')
     # Current direction of the microswimmer
-    plt.quiver(x_naive[i][0], x_naive[i][1], x_naive[i][2], x_naive[i][3], color='green')
+    # plt.quiver(x_naive[i][0], x_naive[i][1], x_naive[i][2], x_naive[i][3], color='green')
+    plt.quiver(x_naive[i][0], x_naive[i][1], 0.5,0.5, color='green')
     # RL Control direction
     plt.quiver(x_rl[i][0], x_rl[i][1], udir_rl[i][0], udir_rl[i][1], color='black')
     # Naive Control direction

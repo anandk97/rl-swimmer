@@ -178,24 +178,8 @@ rl-swimmer/
 └── README.md           # This file
 ```
 
-## Citation
 
-If you use this code in your research, please cite:
-
-```
-@article{yourname2023,
-  title={Reinforcement Learning Control of Microswimmers in 2-D Turbulent Flow},
-  author={Your Name},
-  journal={arXiv preprint arXiv:xxxx.xxxxx},
-  year={2023}
-}
-```
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
 
-- The fluid dynamics simulation is based on [relevant papers/resources]
 - The reinforcement learning framework builds on Keras-RL and OpenAI Gym
